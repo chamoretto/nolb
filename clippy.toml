@@ -1,0 +1,4 @@
+disallowed-methods = [
+    { path = "core::option::Option::unwrap", reason = "no panics throught unwraps allowed" },
+    { path = "std::option::Option::unwrap", reason = "no panics throught unwraps allowed" },
+]

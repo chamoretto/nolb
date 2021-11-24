@@ -1,0 +1,7 @@
+[package]
+name = "nolb-agent"
+version = "0.1.0"
+edition = "2021"
+authors = ["George Chamor <chamor.work@gmail.com>"]
+
+[dependencies]

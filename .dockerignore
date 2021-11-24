@@ -1,0 +1,12 @@
+.dockerignore
+.git*
+Dockerfile
+
+# From .gitignore
+debug/
+target/
+**/*.rs.bk
+.idea/
+.vscode/
+/node_modules
+.cargo/config.toml
