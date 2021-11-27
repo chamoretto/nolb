@@ -1,10 +1,12 @@
 [workspace]
 members = [
-    "nolb-core",
     "nolb-agent",
     "nolb-cli",
+    "nolb-codegen",
+    "nolb-core",
     "nolb-gui-native",
-    "nolb-gui-web"
+    "nolb-gui-web",
+    "nolb-plugins"
 ]
 
 # NB: the `bench` and `release` profiles must remain EXACTLY the same.
@@ -22,3 +24,12 @@ lto = "fat"
 opt-level = 3 # Optimize for performance
 debug = false
 incremental = false
+
+[patch.crates-io]
+nolb-agent = { path = "nolb-agent" }
+nolb-cli = { path = "nolb-cli" }
+nolb-codegen = { path = "nolb-codegen" }
+nolb-core = { path = "nolb-core" }
+nolb-gui-native = { path = "nolb-gui-native" }
+nolb-gui-web = { path = "nolb-gui-web" }
+nolb-plugins = { path = "nolb-plugins" }
