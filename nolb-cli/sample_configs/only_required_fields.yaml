@@ -1,0 +1,27 @@
+agents:
+  - name: host1
+    provider: hetzner
+    provider_properties:
+      some_prop1:
+        - 1
+        - 3
+        - 4
+    hardware_requirements:
+      cpu: 4
+      memory: 2000
+      disk_volume: 20
+    applications:
+      - example_app_docker
+      - example_app_host
+
+applications:
+  - name: example_app_docker
+    docker:
+      image: hello-world:latest
+      run_cmd: docker run --rm %image% # OR compose: ".docker-compose.yml" # переделать на run_args
+
+  - name: example_app_host
+    host:
+      distribution:
+        distributor_id: Ubuntu
+        release: '20.04'

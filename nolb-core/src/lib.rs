@@ -4,7 +4,13 @@
     generic_associated_types,
     min_specialization,
     const_trait_impl,
-    const_generics_defaults
+    decl_macro,
+    let_else,
+    bool_to_option,
+    total_cmp,
+    const_option,
+    const_result,
+    associated_type_defaults
 )]
 #![deny(
     clippy::indexing_slicing,
@@ -14,6 +20,8 @@
     clippy::redundant_closure_for_method_calls,
     clippy::same_functions_in_if_condition
 )]
+
+mod traits;
 
 #[cfg(test)]
 mod tests {

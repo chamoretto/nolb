@@ -1,0 +1,69 @@
+agents:
+  - name: host1
+    provider: hetzner     # check among connected plugins. Suggest enable some if not.
+    provider_properties: # HashMap<String, serde_json/yaml/toml::Value>, plugin will interpret it
+      some_prop1:
+        - 1
+        - 3
+        - 4
+      # arbitrary values and keys, such as api key.
+    # App will provide the same auth data for every host, if this property is defined, all you need is ip address,
+    # which will be rendered at the `current` command and at the interactive mode
+    # Otherwise, you can ask the app to give you credentials, which was randomly generated and saved at the app's net
+    server_auth: # | default=null # TODO: add check for empty or if all properties down is null, provide warning
+      ssh_port: 22  # port for exposing ssh on the server | default=22
+      user: username  # | default=null
+      password: password  # | default=null OR pub_key: "some_pub.key" | default=null
+    hardware_requirements:
+      cpu: 4 # cores, logical
+      memory: 2000 # RAM, MegaBytes
+      swap_size: 2 # RAM, GigaBytes | default = null, do not change server's swap limits
+      disk_volume: 20 # HardDiskDrive, GigaBytes
+      disk_volume_spread_over: 20 # GB, 0 = require exact %disk_volume% GB or less, not more | default=0
+      disk_volume_spread_above: 5 # GB, 0 = require exact %disk_volume% GB or more, not less | default=0
+      disk_type: hdd # `hdd` or `ssd` | default = null, no matter, prior to ssd
+      # if `true`, returns error if provider has no available disk of needed type.
+      # if `false`, will use any available disk with priority of disk_type.
+      # Note: use `false`, if provider has no information about type of disk at server instances
+      dist_type_hard_requirement: true # | default=false
+    autoscaling_policy: # if this property is missing, host will not scale! | default=null
+      # TODO: 1. think about averages and how to calculate such values
+      # TODO: 2. there are place for many possible warnings and errors, like: no load attributes, but factor=3
+      # TODO:  or even all missing properties except max_instances, or ... there are many possible errors, really
+      # after this threshold agent will add another server and auto-balance load between the old instances and the new
+      cpu_load: 90    # percents | default = ignore this parameter for auto-balancing
+      memory_load: 95 # percents | default = ignore this parameter for auto-balancing
+      swap_load: 80   # percents | default = ignore this parameter for auto-balancing
+      # numbers from 1 to 3
+      # 1 - scale upon reaching of any factor above.
+      # 2 - scale upon reaching 2 of 3 (or 2 of 2) factors
+      # 3 - scale only of all 3 factors are reached their limits simultaneously.
+      # if the number is less than the number of factors declared above, an error will be reported.
+      factors: 1 # | default=1
+      max_instances: 12 # | default=null, will create instances while load is still high. WARNING: it may be expensive!
+      min_instances: 3  # How many instances should be created and maintained | default = 1
+    applications:
+      - example_app_docker
+      - example_app_host
+
+applications:
+  - name: example_app_docker
+    docker:
+      image: hello-world:latest
+      image_pull_timeout: 30    # | default=10 seconds
+      timeout: 30               # | default=10 seconds
+      run_cmd: docker run --rm %image% # OR compose: ".docker-compose.yml" # переделать на run_args
+
+  - name: example_app_host
+    host:
+      distribution:
+        distributor_id: Ubuntu
+        release: '20.04'
+      packages: # | default=null
+        update: true  # | default=false
+        upgrade: true # | default=false
+        install: # | default=null
+          - git
+          - gcc
+        post_install_commands: # will be run just after the installation of the all packages above | default=null
+          - echo "hello world!"
