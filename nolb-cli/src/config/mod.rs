@@ -19,6 +19,7 @@ pub struct ConfigRoot {
 pub mod agent {
     use serde::{Deserialize, Serialize};
     use std::collections::HashMap;
+    use validator::Validate;
 
     #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
     pub struct Agent {
@@ -38,10 +39,10 @@ pub mod agent {
         PubKey(String),
     }
 
-    #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+    #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Validate)]
     pub struct Auth {
         #[serde(default = "ssh_port_default")]
-        pub ssh_port: u64,
+        pub ssh_port: u64, // todo: replace with lesser digit and additional check for valid unix port number
         pub user: Option<String>,
         #[serde(flatten)]
         pub auth_parameter: Option<AuthParameter>,
@@ -94,9 +95,9 @@ pub mod agent {
         Three = 3,
     }
 
-    impl Into<u8> for Factors {
-        fn into(self) -> u8 {
-            match self {
+    impl From<Factors> for u8 {
+        fn from(factors: Factors) -> Self {
+            match factors {
                 Factors::One => Factors::One as u8,
                 Factors::Two => Factors::One as u8,
                 Factors::Three => Factors::Three as u8,
@@ -174,6 +175,7 @@ pub mod application {
 
 // #[cfg(tests)]
 mod tests {
+    #[allow(unused_imports)]
     use crate::utility::macros::read_file_content;
 
     #[test]

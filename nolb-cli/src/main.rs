@@ -10,7 +10,8 @@
     total_cmp,
     const_option,
     const_result,
-    associated_type_defaults
+    associated_type_defaults,
+    derive_default_enum
 )]
 #![deny(
     clippy::indexing_slicing,
@@ -58,10 +59,4 @@ fn main() {
             todo!()
         },
     }
-}
-
-#[test]
-fn test_smth() {
-    // TODO: test uom
-    use uom::si::information::Information;
 }
